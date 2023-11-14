@@ -39,6 +39,7 @@ ekleFormu.addEventListener("submit", (e) =>{
     gelirinizTd.innerText = gelirler
     // formun içerisini gönderme işleminden sonra boşalt
     ekleFormu.reset()
+    hesaplaveGuncelle()
 })
 
 window.addEventListener("load",()=>{
@@ -132,4 +133,35 @@ const hesaplaveGuncelle = () =>{
 
     giderinizTd.innerText = giderler; // gider toplamını ekrana yaz.
     kalanTd.innerText = gelirler - giderler;
+
+    const borclu = gelirler - giderler < 0;
+
+    // kaldırılacak alan ve eklenecek alan
+    kalanTd.classList.toggle("text-danger", borclu)
+    // kalanTh.classList.toggle("text-danger", borclu)
 }
+
+harcamaBody.addEventListener("click", (e)=>{
+    console.log(e.target);
+    if(e.target.classList.contains("fa-trash-can")){
+        e.target.parentElement.parentElement.remove();
+    }
+    const id = e.target.id;
+
+    // silinen harcamayı arrayden çıkarır.
+    harcamaListesi = harcamaListesi.filter(harcama => harcama.id != id)
+    localStorage.setItem("harcamalar", JSON.stringify(harcamaListesi))
+    // gelen harcama listesini idye göre tekrar oluştur. ve locale haber ver.
+    hesaplaveGuncelle();
+});
+
+
+temizleBtn.addEventListener("click", () =>{
+    if(confirm("Are you sure you want to delete this?")){
+        harcamaListesi = [] // tüm harcamaları listeden siler
+        gelirler = 0 // gelirler sıfırlanır.
+        localStorage.clear();
+        harcamaBody.innerHTML = "";
+        hesaplaveGuncelle();
+    }
+})
