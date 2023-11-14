@@ -60,7 +60,10 @@ harcamaFormu.addEventListener("submit", (e)=>{
     const yeniHarcama = {
         //  unique id oluşturmak için kullanıldı.
         id: new Date().getTime(),
-        tarih: tarih.value,
+        // tarihi TR formatında gösterme
+        // tarih: tarih.value,
+        // içine TR yazabiliriz, you can type inside the toLocalDateString parameter: TR
+        tarih: new Date (tarihInput.value).toLocaleDateString("TR"),
         alan: harcamaAlaniInput.value,
         miktar: miktar.value
     }
@@ -128,11 +131,13 @@ const harcamayiDomaYaz = ({id, miktar, tarih, alan}) =>{
 
 
 const hesaplaveGuncelle = () =>{
-    gelirinizTd.innerText = gelirler;
+    // uluslar arası parabirimine göre yazar.
+    // İçine TR koyarsak ona göre yazar.
+    gelirinizTd.innerText = new Intl.NumberFormat("TR").format(gelirler);
     const giderler = harcamaListesi.reduce((toplama, harcama)=> toplama + Number(harcama.miktar),0)
 
-    giderinizTd.innerText = giderler; // gider toplamını ekrana yaz.
-    kalanTd.innerText = gelirler - giderler;
+    giderinizTd.innerText = new Intl.NumberFormat("TR").format(giderler); // gider toplamını ekrana yaz.
+    kalanTd.innerText = new Intl.NumberFormat("TR").format(gelirler - giderler);
 
     const borclu = gelirler - giderler < 0;
 
